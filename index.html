@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>AR Menu (Premium 3D Design)</title>
+    <!-- A-Frame and AR.js -->
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="margin: 0; overflow: hidden;">
+
+    <!-- UI Overlay -->
+    <div class="ui-container">
+        <header class="glass-panel">
+            <h1>AR Vision Menu</h1>
+            <p style="color: #00f2fe; font-weight: bold; margin-top: 10px;">
+                Premium 3D Dishes! Marker ko scan karein.
+            </p>
+        </header>
+
+        <div class="menu-selection glass-panel">
+            <h3>Categories</h3>
+            <div class="button-group">
+                <button class="active" onclick="selectDish('burger')">
+                    <span class="icon">🍔</span> Classic Burger
+                </button>
+                <button onclick="selectDish('pizza')">
+                    <span class="icon">🍕</span> Pepperoni Pizza
+                </button>
+                <button onclick="selectDish('dessert')">
+                    <span class="icon">🍰</span> Choco Cake
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AR Scene with Realistic Lighting -->
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;" renderer="antialias: true; colorManagement: true; physicallyCorrectLights: true;">
+        
+        <a-assets>
+            <!-- HD Textures for realistic materials -->
+            <img id="bun-tex" src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=512&q=60" crossorigin="anonymous">
+            <img id="meat-tex" src="https://images.unsplash.com/photo-1606850681323-eb56d78ec811?auto=format&fit=crop&w=512&q=60" crossorigin="anonymous">
+            <img id="cheese-tex" src="https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?auto=format&fit=crop&w=512&q=60" crossorigin="anonymous">
+            <img id="crust-tex" src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=512&q=60" crossorigin="anonymous">
+            <img id="pizza-tex" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=512&q=60" crossorigin="anonymous">
+            <img id="cake-tex" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=512&q=60" crossorigin="anonymous">
+            <img id="wood-tex" src="https://images.unsplash.com/photo-1546484396-fb3fc6f95f98?auto=format&fit=crop&w=512&q=60" crossorigin="anonymous">
+        </a-assets>
+
+        <!-- Lighting for Premium Look -->
+        <a-light type="ambient" color="#ffffff" intensity="1.5"></a-light>
+        <a-light type="directional" color="#fff" intensity="2" position="-1 2 1" castShadow="true"></a-light>
+        <a-light type="point" color="#4facfe" intensity="1.5" position="0 1 0" distance="5"></a-light>
+
+        <!-- The Marker with custom freeze component -->
+        <a-marker preset="hiro" freeze-on-lost>
+            
+            <!-- Dishes Container with a Floating Animation -->
+            <a-entity id="dishes-container" animation="property: position; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true; to: 0 0.1 0">
+                
+                <!-- Holographic Pedestal (Shows under every dish) -->
+                <a-entity id="hologram-base" position="0 -0.5 0">
+                    <a-cylinder color="#00f2fe" radius="1.3" height="0.05" material="transparent: true; opacity: 0.1; emissive: #00f2fe; emissiveIntensity: 0.8"></a-cylinder>
+                    <a-ring color="#4facfe" radius-inner="1.4" radius-outer="1.45" rotation="-90 0 0" material="emissive: #4facfe; emissiveIntensity: 1" animation="property: rotation; to: -90 360 0; loop: true; dur: 8000; easing: linear"></a-ring>
+                    <a-ring color="#00f2fe" radius-inner="1.6" radius-outer="1.62" rotation="-90 0 0" material="emissive: #00f2fe; emissiveIntensity: 1" animation="property: rotation; to: -90 -360 0; loop: true; dur: 12000; easing: linear"></a-ring>
+                </a-entity>
+
+                <!-- 1. Premium Burger Dish -->
+                <a-entity id="dish-burger" visible="true" animation="property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear">
+                    <a-entity position="0 0.4 0" scale="0.6 0.6 0.6">
+                        <!-- Wooden Serving Board -->
+                        <a-cylinder src="#wood-tex" radius="1.8" height="0.1" position="0 -0.8 0" material="roughness: 0.9; metalness: 0.1"></a-cylinder>
+                        
+                        <!-- Bottom Bun -->
+                        <a-cylinder src="#bun-tex" radius="1" height="0.3" position="0 -0.5 0" material="roughness: 0.8; metalness: 0"></a-cylinder>
+                        <!-- Patty -->
+                        <a-cylinder src="#meat-tex" radius="0.95" height="0.4" position="0 -0.15 0" material="roughness: 0.9; metalness: 0.1; color: #5c3a21"></a-cylinder>
+                        <!-- Melted Cheese -->
+                        <a-box src="#cheese-tex" depth="1.4" height="0.05" width="1.4" position="0 0.1 0" rotation="0 45 0" material="roughness: 0.3; metalness: 0.2; color: #ffcc00"></a-box>
+                        <!-- Lettuce (Using multiple wavy planes for realism) -->
+                        <a-entity position="0 0.2 0">
+                            <a-cylinder color="#73b52b" radius="1.05" height="0.05" material="roughness: 0.6; transparent: true; opacity: 0.9"></a-cylinder>
+                            <a-torus color="#5c9e1c" radius="0.9" radius-tubular="0.05" scale="1 0.2 1" position="0 0.05 0"></a-torus>
+                        </a-entity>
+                        <!-- Tomatoes -->
+                        <a-cylinder color="#d93829" radius="0.85" height="0.08" position="0 0.3 0" material="roughness: 0.2; metalness: 0.1"></a-cylinder>
+                        <a-cylinder color="#c4281a" radius="0.85" height="0.08" position="0 0.38 0" material="roughness: 0.2; metalness: 0.1"></a-cylinder>
+                        <!-- Top Bun -->
+                        <a-sphere src="#bun-tex" radius="1" position="0 0.5 0" scale="1 0.6 1" material="roughness: 0.8; metalness: 0"></a-sphere>
+                        <!-- Sesame Seeds scattered -->
+                        <a-sphere color="#fffdd0" radius="0.04" position="0.3 1 0.2" material="roughness: 0.8"></a-sphere>
+                        <a-sphere color="#fffdd0" radius="0.04" position="-0.3 1 -0.2"></a-sphere>
+                        <a-sphere color="#fffdd0" radius="0.04" position="0 1.05 0"></a-sphere>
+                        <a-sphere color="#fffdd0" radius="0.04" position="-0.4 0.95 0.3"></a-sphere>
+                    </a-entity>
+                    <a-entity position="0 1.8 0" rotation="0 0 0">
+                        <a-plane color="#111" opacity="0.75" width="2" height="0.8" position="0 0 0" material="shader: flat; borderRadius: 0.1"></a-plane>
+                        <a-text value="Classic Burger\n$12.99" align="center" color="#4facfe" width="4" position="0 0 0.05"></a-text>
+                    </a-entity>
+                </a-entity>
+
+                <!-- 2. Premium Pizza Dish -->
+                <a-entity id="dish-pizza" visible="false" animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear">
+                    <a-entity position="0 0.5 0" scale="0.6 0.6 0.6">
+                        <!-- Pizza Pan / Board -->
+                        <a-cylinder src="#wood-tex" radius="2" height="0.05" position="0 -0.1 0" material="roughness: 0.9; metalness: 0.1"></a-cylinder>
+                        
+                        <!-- Crust -->
+                        <a-cylinder src="#crust-tex" radius="1.8" height="0.1" position="0 0 0" material="roughness: 0.9"></a-cylinder>
+                        <a-torus src="#crust-tex" radius="1.75" radius-tubular="0.08" position="0 0.05 0" rotation="90 0 0" material="roughness: 0.8"></a-torus>
+                        
+                        <!-- Cheese and Sauce (Textured) -->
+                        <a-cylinder src="#pizza-tex" radius="1.7" height="0.12" position="0 0.02 0" material="roughness: 0.4; metalness: 0.1"></a-cylinder>
+                        
+                        <!-- Pepperoni Slices with better material -->
+                        <a-cylinder src="#meat-tex" color="#c92a2a" radius="0.3" height="0.13" position="0.7 0.03 0.5" material="roughness: 0.5; metalness: 0.2"></a-cylinder>
+                        <a-cylinder src="#meat-tex" color="#c92a2a" radius="0.3" height="0.13" position="-0.8 0.03 0.6" material="roughness: 0.5; metalness: 0.2"></a-cylinder>
+                        <a-cylinder src="#meat-tex" color="#c92a2a" radius="0.3" height="0.13" position="-0.5 0.03 -0.8" material="roughness: 0.5; metalness: 0.2"></a-cylinder>
+                        <a-cylinder src="#meat-tex" color="#c92a2a" radius="0.3" height="0.13" position="0.8 0.03 -0.6" material="roughness: 0.5; metalness: 0.2"></a-cylinder>
+                        <a-cylinder src="#meat-tex" color="#c92a2a" radius="0.3" height="0.13" position="0 0.03 0" material="roughness: 0.5; metalness: 0.2"></a-cylinder>
+                    </a-entity>
+                    <a-entity position="0 1.8 0" rotation="0 0 0">
+                        <a-plane color="#111" opacity="0.75" width="2" height="0.8" position="0 0 0" material="shader: flat"></a-plane>
+                        <a-text value="Pepperoni Pizza\n$16.50" align="center" color="#4facfe" width="4" position="0 0 0.05"></a-text>
+                    </a-entity>
+                </a-entity>
+
+                <!-- 3. Premium Dessert Dish -->
+                <a-entity id="dish-dessert" visible="false" animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear">
+                    <a-entity position="0 0.4 0" scale="0.7 0.7 0.7">
+                        <!-- Glass Plate -->
+                        <a-cylinder color="#e0f7fa" radius="1.5" height="0.05" position="0 0 0" material="transparent: true; opacity: 0.6; roughness: 0.1; metalness: 0.8"></a-cylinder>
+                        <a-torus color="#b2ebf2" radius="1.45" radius-tubular="0.05" position="0 0.02 0" rotation="90 0 0" material="transparent: true; opacity: 0.8; roughness: 0.1; metalness: 0.5"></a-torus>
+                        
+                        <!-- Chocolate Cake Base -->
+                        <a-cylinder src="#cake-tex" color="#3d2314" radius="0.8" height="0.8" position="0 0.4 0" material="roughness: 0.9; metalness: 0.1"></a-cylinder>
+                        
+                        <!-- Pink Frosting Drip Effect -->
+                        <a-cylinder src="#cake-tex" color="#ffb6c1" radius="0.82" height="0.2" position="0 0.9 0" material="roughness: 0.4; metalness: 0.1"></a-cylinder>
+                        <a-sphere color="#ffb6c1" radius="0.15" position="0.75 0.8 0" material="roughness: 0.4"></a-sphere>
+                        <a-sphere color="#ffb6c1" radius="0.15" position="-0.75 0.8 0" material="roughness: 0.4"></a-sphere>
+                        <a-sphere color="#ffb6c1" radius="0.15" position="0 0.8 0.75" material="roughness: 0.4"></a-sphere>
+                        <a-sphere color="#ffb6c1" radius="0.15" position="0 0.8 -0.75" material="roughness: 0.4"></a-sphere>
+                        
+                        <!-- Glossy Cherry -->
+                        <a-sphere color="#d1112b" radius="0.18" position="0 1.15 0" material="roughness: 0.1; metalness: 0.6"></a-sphere>
+                        <!-- Cherry Stem -->
+                        <a-cylinder color="#1e5414" radius="0.015" height="0.4" position="0.05 1.35 0" rotation="0 0 -20"></a-cylinder>
+                    </a-entity>
+                    <a-entity position="0 1.8 0" rotation="0 0 0">
+                        <a-plane color="#111" opacity="0.75" width="2" height="0.8" position="0 0 0" material="shader: flat"></a-plane>
+                        <a-text value="Choco Cake\n$8.00" align="center" color="#4facfe" width="4" position="0 0 0.05"></a-text>
+                    </a-entity>
+                </a-entity>
+                
+            </a-entity>
+        </a-marker>
+
+        <a-entity camera></a-entity>
+    </a-scene>
+    
+    <script src="script.js"></script>
+</body>
+</html>
