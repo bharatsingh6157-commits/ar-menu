@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "aframe-orbit-controls": "^1.3.2"
+  }
+}
